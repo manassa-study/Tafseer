@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>منصة المذاكرة — مقررات التفسير</title>
 <meta name="description" content="منصة مذاكرة مجانية لمقررات التفسير: التفسير المقارن وتاريخ التفسير، بملخصات وخرائط واختبارات.">
+<meta name="theme-color" content="#0b2a52">
+<meta property="og:title" content="منصة المذاكرة — مقررات التفسير">
+<meta property="og:description" content="ملخصات وخرائط ذهنية وبطاقات واختبارات لمقررات التفسير المقارن وتاريخ التفسير.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b2a52'/%3E%3Cpath d='M32 9l5.6 9.5 10.9-3-3 10.9L55 32l-9.5 5.6 3 10.9-10.9-3L32 55l-5.6-9.5-10.9 3 3-10.9L9 32l9.5-5.6-3-10.9 10.9 3z' fill='%23f0c96b'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Scheherazade+New:wght@400;600;700&family=Noto+Kufi+Arabic:wght@500;600;700&family=Tajawal:wght@400;500;700;800&display=swap">
@@ -38,6 +42,7 @@ a{color:inherit}
 .hero::before{content:"";position:absolute;inset:0;background-image:var(--pattern);opacity:.09}
 .hero>*{position:relative}
 .bismillah{font-family:var(--f-read);font-size:clamp(20px,4vw,26px);color:var(--gold-2);margin:0 0 18px;opacity:.95}
+.salawat{font-family:var(--f-read);font-size:clamp(16px,3vw,19px);color:#e9d9a8;margin:-12px 0 18px;opacity:.9}
 .welcome{font-family:var(--f-head);font-weight:600;font-size:clamp(15px,2.4vw,18px);color:#dbe5f5;margin:0 0 4px;letter-spacing:.3px}
 .hero h1{font-family:var(--f-title);font-weight:700;font-size:clamp(44px,9vw,84px);line-height:1.25;margin:0;
   background:linear-gradient(180deg,#fff3d1,#f0c96b 55%,#c9972b);-webkit-background-clip:text;background-clip:text;color:transparent;
@@ -88,17 +93,74 @@ main{flex:1;width:100%;max-width:1040px;margin:-80px auto 0;padding:0 16px 48px;
 .about+.features{margin-top:16px}
 footer{text-align:center;padding:26px 16px 34px;color:var(--muted);font-size:14.5px;border-top:1px solid var(--line)}
 footer .du{font-family:var(--f-read);font-size:19px;color:var(--gold-ink);display:block;margin-bottom:4px}
+
+/* ---------- Interactive layer ---------- */
+#blade{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+.hero{isolation:isolate}
+.hero .glow{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .4s;
+  background:radial-gradient(420px circle at var(--hx,50%) var(--hy,40%),rgba(240,201,107,.16),transparent 60%)}
+.hero:hover .glow{opacity:1}
+.hero .stars{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero .stars i{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7dc93;box-shadow:0 0 8px 2px rgba(240,201,107,.7);opacity:0;animation:twinkle 4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:.9;transform:scale(1)}}
+.hero h1{background-size:200% 100%;animation:goldshine 6s linear infinite;
+  background-image:linear-gradient(100deg,#c9972b 0%,#f0c96b 25%,#fff6dc 40%,#f0c96b 55%,#c9972b 75%,#f0c96b 100%)}
+@keyframes goldshine{to{background-position:-200% 0}}
+.ornament svg{animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.card{position:relative;transform-style:preserve-3d;will-change:transform}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;z-index:2;
+  background:radial-gradient(380px circle at var(--mx,50%) var(--my,50%),rgba(240,201,107,.22),transparent 55%)}
+.card:hover::after{opacity:1}
+.card-top::after{content:"";position:absolute;top:0;bottom:0;width:45%;left:-60%;transform:skewX(-20deg);pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent)}
+.card:hover .card-top::after{animation:sweep .9s ease}
+@keyframes sweep{to{left:130%}}
+.go{position:relative;overflow:hidden}
+.go::before{content:"";position:absolute;top:-50%;bottom:-50%;width:30%;left:-40%;transform:skewX(-20deg);background:rgba(255,255,255,.55);filter:blur(2px)}
+.card:hover .go::before{animation:sweep 1s ease .1s}
+.card:hover .icon{transform:rotate(-8deg) scale(1.08);box-shadow:0 0 18px rgba(240,201,107,.55)}
+.icon{transition:transform .35s,box-shadow .35s}
+.feat{transition:transform .25s,border-color .25s,box-shadow .25s}
+.feat:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 10px 24px rgba(201,151,43,.18)}
+.feat:hover .dot{animation:pop .5s ease}
+@keyframes pop{50%{transform:scale(1.18)}}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+.hint{display:inline-flex;align-items:center;gap:8px;margin-top:22px;font-size:13.5px;color:#b9c7de;padding:6px 14px;border-radius:999px;border:1px dashed rgba(240,201,107,.4)}
+.hint b{color:var(--gold-2);font-weight:700}
+
+.credit{display:inline-flex;flex-direction:column;align-items:center;gap:2px;margin-top:16px;padding:12px 26px;border-radius:16px;
+  background:var(--surface);border:1px solid var(--line);position:relative;overflow:hidden}
+.credit small{font-size:13px;color:var(--muted)}
+.credit .name{font-family:var(--f-title);font-weight:700;font-size:28px;line-height:1.35;
+  background:linear-gradient(100deg,#8a5c08,#c9972b 30%,#f0c96b 45%,#c9972b 60%,#8a5c08);background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:goldshine 5s linear infinite}
+.credit .latin{font-size:13px;letter-spacing:1.5px;color:var(--muted);direction:ltr;text-transform:uppercase}
+@media (prefers-color-scheme: dark){.credit .name{background-image:linear-gradient(100deg,#c9972b,#f0c96b 30%,#fff3d1 45%,#f0c96b 60%,#c9972b)}}
+
+@media (prefers-reduced-motion:reduce){
+  .hero h1,.credit .name,.ornament svg,.hero .stars i{animation:none!important}
+  .reveal{opacity:1;transform:none}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 
 <header class="hero">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"></div>
   <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+  <p class="salawat">وَالصَّلَاةُ وَالسَّلَامُ عَلَى سَيِّدِنَا رَسُولِ اللَّهِ ﷺ</p>
   <p class="welcome">أهلاً وسهلاً بكم في</p>
   <h1>منصة المذاكرة</h1>
   <div class="ornament" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 4.4L19 5l-1.4 4.4L22 12l-4.4 2.6L19 19l-4.4-1.4L12 22l-2.6-4.4L5 19l1.4-4.4L2 12l4.4-2.6L5 5l4.4 1.4z"/></svg></div>
   <p class="lead">ملخصات وخرائط ذهنية وبطاقات واختبارات لمقررات التفسير، في مكان واحد. اختر المقرر لتبدأ المذاكرة.</p>
+  <p class="hint" aria-hidden="true">✨ حرّك <b>الفأرة</b> أو <b>إصبعك</b> على الصفحة</p>
 </header>
 
 <main>
@@ -106,7 +168,7 @@ footer .du{font-family:var(--f-read);font-size:19px;color:var(--gold-ink);displa
   <div class="grid">
 
     <!-- المقرر الأول: التفسير المقارن -->
-    <a class="card green" href="TafseerMaqaranAQU.html">
+    <a class="card reveal green" href="TafseerMaqaranAQU.html">
       <div class="card-top">
         <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5C4 4.5 7 4.3 12 6c5-1.7 8-1.5 10-.5V19c-2-1-5-1.2-10 .5C7 17.8 4 18 2 19z"/><path d="M12 6v13.5"/><path d="M5.5 9.5h3M5.5 12.5h3M15.5 9.5h3M15.5 12.5h3"/></svg></span>
         <span class="badge">مقرر</span>
@@ -121,7 +183,7 @@ footer .du{font-family:var(--f-read);font-size:19px;color:var(--gold-ink);displa
     </a>
 
     <!-- المقرر الثاني: تاريخ التفسير (غيّري اسم الملف هنا إذا كان مختلفاً) -->
-    <a class="card blue" href="TareekhTafseerAQU.html">
+    <a class="card reveal blue" href="TareekhTafseerAQU.html">
       <div class="card-top">
         <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
         <span class="badge">مقرر</span>
@@ -137,12 +199,12 @@ footer .du{font-family:var(--f-read);font-size:19px;color:var(--gold-ink);displa
 
   </div>
 
-  <section class="about">
+  <section class="about reveal">
     <h3>عن المنصة</h3>
     <p>جُمعت هذه المنصة لتيسير مذاكرة مقررات التفسير على الطلاب. كل مقرر مرتب أبواباً وفصولاً، ومع كل باب ملخص واضح وخريطة ذهنية وبطاقات للحفظ وأسئلة للمراجعة، ثم اختبار محاكي بمؤقت قبل الامتحان. تعمل الصفحات على الجوال والحاسوب، مجاناً ودون تسجيل.</p>
   </section>
 
-  <section class="features" aria-label="مميزات المنصة">
+  <section class="features reveal" aria-label="مميزات المنصة">
     <div class="feat"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h13"/></svg></div><b>ملخصات منظمة</b><span>كل باب في صفحة واضحة</span></div>
     <div class="feat"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="4.5" cy="5" r="2"/><circle cx="19.5" cy="5" r="2"/><circle cx="12" cy="20.5" r="2"/><path d="M6 6.4l3.8 3.6M18 6.4l-3.8 3.6M12 15v3.5"/></svg></div><b>خرائط ذهنية</b><span>ترى الصورة كاملة</span></div>
     <div class="feat"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg></div><b>بطاقات للحفظ</b><span>راجع التعريفات بسرعة</span></div>
@@ -153,7 +215,111 @@ footer .du{font-family:var(--f-read);font-size:19px;color:var(--gold-ink);displa
 <footer>
   <span class="du">رَبِّ زِدْنِي عِلْمًا</span>
   منصة مذاكرة مجانية للطلاب
+  <br>
+  <div class="credit">
+    <small>إعداد وتصميم</small>
+    <span class="name">محمد بلال البلوشي</span>
+    <span class="latin">Muhammad Bilal Albloshi</span>
+  </div>
 </footer>
+<canvas id="blade" aria-hidden="true"></canvas>
 
+<script>
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* twinkling stars in the hero */
+  var stars = document.querySelector('.hero .stars');
+  if (stars) for (var i=0;i<26;i++){var st=document.createElement('i');
+    st.style.left=(Math.random()*100)+'%'; st.style.top=(Math.random()*100)+'%';
+    st.style.animationDelay=(Math.random()*4)+'s'; st.style.animationDuration=(3+Math.random()*3)+'s';
+    stars.appendChild(st);}
+
+  /* hero spotlight follows the pointer */
+  var hero=document.querySelector('.hero');
+  hero.addEventListener('pointermove',function(e){var r=hero.getBoundingClientRect();
+    hero.style.setProperty('--hx',(e.clientX-r.left)+'px'); hero.style.setProperty('--hy',(e.clientY-r.top)+'px');});
+
+  /* cards: glow under cursor + gentle 3D tilt (mouse only) */
+  document.querySelectorAll('.card').forEach(function(c){
+    c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+      c.style.setProperty('--mx',x+'px'); c.style.setProperty('--my',y+'px');
+      if(e.pointerType==='mouse'&&!reduce){var rx=((y/r.height)-.5)*-7, ry=((x/r.width)-.5)*7;
+        c.style.transform='perspective(900px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-5px)';}});
+    c.addEventListener('pointerleave',function(){c.style.transform='';});
+  });
+
+  /* scroll reveal */
+  var rv=document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});},{threshold:.12});
+    rv.forEach(function(el,i){el.style.transitionDelay=(i%2*0.12)+'s';io.observe(el);});
+  } else rv.forEach(function(el){el.classList.add('in');});
+
+  if(reduce) return;
+
+  /* ---- blade trail + sparks ---- */
+  var cv=document.getElementById('blade'),ctx=cv.getContext('2d'),dpr=1,W=0,H=0;
+  function size(){dpr=Math.min(window.devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
+    cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  size(); addEventListener('resize',size);
+
+  var pts=[],sparks=[],LIFE=380,running=false,last=null;
+  var small=matchMedia('(max-width:700px)').matches, MAXSPARK=small?70:160;
+
+  function add(x,y){var t=performance.now();
+    if(last){var dx=x-last.x,dy=y-last.y,d=Math.hypot(dx,dy);
+      var n=Math.min(Math.floor(d/14),small?2:4);
+      for(var k=0;k<n&&sparks.length<MAXSPARK;k++){var a=Math.atan2(dy,dx)+Math.PI+(Math.random()-.5)*1.6,sp=1+Math.random()*3.5;
+        sparks.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-.6,life:1,s:1+Math.random()*2.2,h:Math.random()<.25?200:(38+Math.random()*12)});}}
+    pts.push({x:x,y:y,t:t}); last={x:x,y:y}; kick();}
+
+  function burst(x,y){for(var k=0;k<(small?18:32);k++){var a=Math.random()*Math.PI*2,sp=2+Math.random()*5;
+      sparks.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,s:1.2+Math.random()*2.4,h:38+Math.random()*14});} kick();}
+
+  addEventListener('pointermove',function(e){add(e.clientX,e.clientY);},{passive:true});
+  addEventListener('touchmove',function(e){var t=e.touches[0];if(t)add(t.clientX,t.clientY);},{passive:true});
+  addEventListener('pointerdown',function(e){last=null;burst(e.clientX,e.clientY);},{passive:true});
+  addEventListener('pointerleave',function(){last=null;});
+  document.addEventListener('mouseleave',function(){last=null;});
+
+  function kick(){if(!running){running=true;requestAnimationFrame(frame);}}
+
+  function frame(){var now=performance.now();
+    ctx.clearRect(0,0,W,H);
+    while(pts.length&&now-pts[0].t>LIFE)pts.shift();
+    if(pts.length<2) last = pts.length? last : null;
+
+    /* the slash: tapered ribbon, glowing gold edge + white-hot core */
+    if(pts.length>1){
+      ctx.globalCompositeOperation='lighter'; ctx.lineCap='round'; ctx.lineJoin='round';
+      for(var pass=0;pass<2;pass++){
+        for(var i=1;i<pts.length;i++){var p0=pts[i-1],p1=pts[i],f=1-(now-p1.t)/LIFE,pos=i/pts.length;
+          if(f<=0)continue; var w=(pass===0?20:5)*pos*f+.5;
+          ctx.strokeStyle=pass===0?'rgba(240,190,80,'+(.45*f)+')':'rgba(255,250,230,'+(.95*f)+')';
+          ctx.shadowColor=pass===0?'rgba(240,180,60,.9)':'rgba(255,240,200,1)'; ctx.shadowBlur=small?0:(pass===0?18:8);
+          ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.lineTo(p1.x,p1.y); ctx.stroke();}
+      }
+      /* bright tip */
+      var tip=pts[pts.length-1],tf=1-(now-tip.t)/LIFE;
+      if(tf>0){var g=ctx.createRadialGradient(tip.x,tip.y,0,tip.x,tip.y,22);
+        g.addColorStop(0,'rgba(255,248,220,'+(.9*tf)+')');g.addColorStop(.4,'rgba(240,201,107,'+(.35*tf)+')');g.addColorStop(1,'rgba(240,201,107,0)');
+        ctx.shadowBlur=0;ctx.fillStyle=g;ctx.beginPath();ctx.arc(tip.x,tip.y,22,0,Math.PI*2);ctx.fill();}
+    }
+
+    /* sparks */
+    ctx.shadowBlur=0; ctx.globalCompositeOperation='lighter';
+    for(var j=sparks.length-1;j>=0;j--){var s=sparks[j];
+      s.x+=s.vx;s.y+=s.vy;s.vy+=.09;s.vx*=.97;s.life-=.022;
+      if(s.life<=0){sparks.splice(j,1);continue;}
+      ctx.strokeStyle='hsla('+s.h+',95%,'+(s.h>100?80:68)+'%,'+s.life+')';
+      ctx.lineWidth=s.s*s.life; ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(s.x-s.vx*2.2,s.y-s.vy*2.2); ctx.stroke();}
+    ctx.globalCompositeOperation='source-over';
+
+    if(pts.length||sparks.length) requestAnimationFrame(frame);
+    else {running=false;ctx.clearRect(0,0,W,H);}
+  }
+})();
+</script>
 </body>
 </html>
