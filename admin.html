@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>لوحة الطلاب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#eef2f7;--surface:#fff;--surface-2:#e3e9f2;--ink:#16213a;--muted:#566176;--line:#cfd8e5;--accent:#1a4f8b;--accent-ink:#fff;--ok:#1d7a4f}
+@media (prefers-color-scheme:dark){:root{--paper:#0c121c;--surface:#131c2a;--surface-2:#1a2536;--ink:#e4e9f2;--muted:#97a3b8;--line:#2a3850;--accent:#6ea8ec;--accent-ink:#061833;--ok:#5fc9a0}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Tajawal",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:24px;margin:0 0 4px;color:var(--accent)}
+.sub{color:var(--muted);margin:0 0 20px;font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:9px 16px;font:inherit;font-weight:700;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpi b{display:block;font-size:28px;color:var(--accent)}
+.kpi span{color:var(--muted);font-size:13px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.bar input{flex:1 1 220px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);padding:9px 12px;font:inherit}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:720px}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+th{color:var(--muted);font-weight:700;font-size:12.5px;white-space:nowrap}
+td.em{direction:ltr;text-align:right;color:var(--muted);font-size:12.5px}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-left:6px}
+.msg{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>لوحة الطلاب</h1>
+  <p class="sub">من سجّل الدخول في منصة المذاكرة، ومتى ذاكر آخر مرة، وكم أنجز في كل مقرر.</p>
+  <div id="app" class="card msg">جارٍ التحميل…</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function(){
+var SB_URL="https://bkqyroqdhkfofoevicjg.supabase.co",SB_KEY="sb_publishable_mmRkRsFroni2dgiF8eTXtQ__WGqONmH";
+var COURSES=[["tafsir-muqaran-v1","التفسير المقارن"],["tareekh-tafseer-v1","تاريخ التفسير"]];
+var app=document.getElementById("app");
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function msg(t){app.className="card msg";app.textContent=t}
+function ar(n){return Number(n).toLocaleString("ar-EG")}
+function day(d){return d?new Date(d).toLocaleDateString("ar-EG",{day:"numeric",month:"short",year:"numeric"}):"—"}
+function ago(d){if(!d)return"—";var m=(Date.now()-new Date(d))/6e4;if(m<60)return"قبل "+ar(Math.max(1,Math.round(m)))+" دقيقة";var h=m/60;if(h<24)return"قبل "+ar(Math.round(h))+" ساعة";return"قبل "+ar(Math.round(h/24))+" يوم"}
+function cnt(o){return o?Object.keys(o).filter(function(k){return o[k]}).length:0}
+if(!window.supabase){msg("تعذّر تحميل أداة تسجيل الدخول. تحقق من الاتصال ثم أعد تحميل الصفحة.");return}
+var sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,detectSessionInUrl:true,flowType:"pkce",storageKey:"study-auth"}});
+function signInView(){
+  app.className="card";app.textContent="";
+  app.appendChild(el("p",null,"سجّل الدخول بحساب Google المسجّل مديراً لعرض الطلاب."));
+  var b=el("button","btn primary","تسجيل الدخول بحساب Google");
+  b.onclick=function(){sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:"select_account"}}})};
+  app.appendChild(b);
+}
+function load(user){
+  msg("جارٍ جلب بيانات الطلاب…");
+  Promise.all([sb.from("profiles").select("*").order("last_seen",{ascending:false}),sb.from("progress").select("user_id,course,state,updated_at")]).then(function(r){
+    if(r[0].error||r[1].error){msg("تعذّر جلب البيانات: "+((r[0].error||r[1].error).message||""));return}
+    var profs=r[0].data||[],prog={};
+    (r[1].data||[]).forEach(function(p){(prog[p.user_id]=prog[p.user_id]||{})[p.course]=p});
+    if(profs.length<=1&&profs.every(function(p){return p.id===user.id})){
+      app.className="card";app.textContent="";
+      app.appendChild(el("p",null,"أنت مسجّل باسم "+(user.email||"")+"، لكن لا يظهر إلا حسابك. إن لم يكن هذا البريد في جدول المديرين (admins) في Supabase فلن ترى بقية الطلاب."));
+      var o=el("button","btn","تسجيل الخروج");o.onclick=function(){sb.auth.signOut().then(signInView)};app.appendChild(o);
+      if(!profs.length)return;
+    }
+    render(user,profs,prog);
+  });
+}
+function render(user,profs,prog){
+  var wk=Date.now()-7*864e5,day1=Date.now()-864e5;
+  var root=document.createDocumentFragment();
+  var k=el("div","kpis");
+  [[profs.length,"طالب مسجّل"],[profs.filter(function(p){return new Date(p.last_seen)>day1}).length,"نشط آخر ٢٤ ساعة"],[profs.filter(function(p){return new Date(p.last_seen)>wk}).length,"نشط آخر ٧ أيام"],[profs.filter(function(p){return new Date(p.created_at)>wk}).length,"انضم هذا الأسبوع"]].forEach(function(x){
+    var d=el("div","kpi");d.appendChild(el("b",null,ar(x[0])));d.appendChild(el("span",null,x[1]));k.appendChild(d)});
+  root.appendChild(k);
+  var card=el("div","card"),bar=el("div","bar"),q=el("input");q.type="search";q.placeholder="ابحث بالاسم أو البريد";
+  var csv=el("button","btn","تنزيل CSV"),out=el("button","btn","تسجيل الخروج");
+  out.onclick=function(){sb.auth.signOut().then(signInView)};
+  bar.appendChild(q);bar.appendChild(csv);bar.appendChild(out);card.appendChild(bar);
+  var tw=el("div","tw"),t=el("table"),th=el("thead"),hr=el("tr");
+  ["الطالب","البريد","انضم","آخر نشاط"].concat(COURSES.map(function(c){return c[1]+": مطالب · بطاقات · اختبارات"})).forEach(function(h){hr.appendChild(el("th",null,h))});
+  th.appendChild(hr);t.appendChild(th);var tb=el("tbody");t.appendChild(tb);tw.appendChild(t);card.appendChild(tw);root.appendChild(card);
+  function rows(){
+    var s=q.value.trim().toLowerCase();tb.textContent="";
+    profs.filter(function(p){return !s||((p.name||"")+" "+(p.email||"")).toLowerCase().indexOf(s)>=0}).forEach(function(p){
+      var tr=el("tr"),nm=el("td");if(new Date(p.last_seen)>day1)nm.appendChild(el("span","dot"));nm.appendChild(document.createTextNode(p.name||"—"));tr.appendChild(nm);
+      tr.appendChild(el("td","em",p.email||""));tr.appendChild(el("td","n",day(p.created_at)));tr.appendChild(el("td","n",ago(p.last_seen)));
+      COURSES.forEach(function(c){var pr=prog[p.id]&&prog[p.id][c[0]],st=pr&&pr.state||null;
+        tr.appendChild(el("td","n",st?ar(cnt(st.done))+" · "+ar(cnt(st.mastered))+" · "+ar((st.quizHist||[]).length):"—"))});
+      tb.appendChild(tr)});
+  }
+  q.oninput=rows;rows();
+  csv.onclick=function(){
+    var lines=[["name","email","joined","last_seen"].concat(COURSES.reduce(function(a,c){return a.concat([c[0]+"_topics",c[0]+"_cards",c[0]+"_quizzes"])},[]))];
+    profs.forEach(function(p){var r=[p.name||"",p.email||"",p.created_at,p.last_seen];
+      COURSES.forEach(function(c){var st=prog[p.id]&&prog[p.id][c[0]]&&prog[p.id][c[0]].state||{};r.push(cnt(st.done),cnt(st.mastered),(st.quizHist||[]).length)});lines.push(r)});
+    var txt="﻿"+lines.map(function(r){return r.map(function(v){v=String(v==null?"":v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(",")}).join("\n");
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/csv"}));a.download="students.csv";a.click();
+  };
+  app.className="";app.style.cssText="";app.textContent="";app.appendChild(root);
+}
+var started=false;
+sb.auth.onAuthStateChange(function(ev,session){
+  if(/[?&]code=/.test(location.search))history.replaceState(null,"",location.pathname);
+  var u=session&&session.user;
+  if(u&&!started){started=true;load(u)}else if(!u){started=false;signInView()}
+});
+})();
+</script>
+</body>
+</html>
