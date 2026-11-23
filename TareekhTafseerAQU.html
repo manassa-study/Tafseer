@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}body{margin:0}</style></head><body>
 <title>دراسة تاريخ التفسير</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -406,7 +405,7 @@ main{min-width:0}
 .recall .ch-s:not(.shown) .ch-n{color:transparent;background:repeating-linear-gradient(90deg,var(--surface-2) 0 10px,var(--line) 10px 12px);border-radius:5px;user-select:none}
 .recall .ch-s:not(.shown) .ch-n *{color:transparent!important;background:transparent!important}
 @media print{.mm2-pick,.mm2-bar,.tl-filter{display:none}}
-.tsum{border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));background:color-mix(in srgb,var(--gold) 9%,var(--surface));border-radius:14px;padding:14px 18px}.tsum>b{display:block;font-family:var(--f-display);font-size:14.5px;color:var(--gold);margin-bottom:6px}.tsum ol{margin:0;padding-inline-start:22px;list-style:arabic-indic;display:grid;gap:4px}.tsum li{font-size:15.5px;line-height:1.8}.tsum li::marker{color:var(--gold);font-weight:800}
+.tsum{border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));background:color-mix(in srgb,var(--gold) 9%,var(--surface));border-radius:14px;padding:14px 18px}.tsum{padding:10px 18px}.tsum>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px}.tsum>summary::-webkit-details-marker{display:none}.tsum>summary::before{content:'◂';color:var(--gold);font-size:12px;transition:transform .2s}.tsum[open]>summary::before{transform:rotate(-90deg)}.tsum>summary b{font-family:var(--f-display);font-size:14.5px;color:var(--gold)}.tsum>summary span{font-size:12px;color:var(--muted);margin-inline-start:auto}.tsum[open]>summary span{display:none}.tsum[open]>summary{margin-bottom:6px}.tsum ol{margin:0;padding-inline-start:22px;list-style:arabic-indic;display:grid;gap:4px}.tsum li{font-size:15.5px;line-height:1.8}.tsum li::marker{color:var(--gold);font-weight:800}
 .qsel{width:100%;max-width:560px;font:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
 .sheet{display:grid;gap:14px}.sheet-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:12px 16px}.sheet-bar p{margin:0;font-size:14px;color:var(--muted);flex:1;min-width:220px}.sheet-h{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;border-bottom:2px solid var(--accent);padding-bottom:8px}.sheet-h b{font-family:var(--f-display);font-size:18px;color:var(--accent)}.sheet-h span{font-size:13px;color:var(--muted)}.sh-ch h2{font-family:var(--f-display);font-size:16px;margin:6px 0 8px;color:var(--accent)}.sh-sec{break-inside:avoid;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 14px;margin-bottom:10px}.sh-sec h3{font-size:13.5px;margin:0 0 6px;color:var(--gold)}.sh-t{padding:6px 0;border-top:1px dashed var(--line)}.sh-t:first-of-type{border-top:0}.sh-t a{color:var(--ink);text-decoration:none;font-size:14px}.sh-t small{color:var(--muted);font-size:11.5px}.sh-t ol,.sh-sec ul{margin:4px 0 0;padding-inline-start:20px;font-size:13.5px;line-height:1.75}.sh-t ol{list-style:arabic-indic}.sh-caps{columns:2 320px;column-gap:12px}@media print{.topbar,.side,.bnav,.seg,.phead,.no-print{display:none!important}.sh-sec{break-inside:auto}.sh-t,.sh-caps .sh-sec{break-inside:avoid}body{background:#fff!important}.sh-sec{border-color:#ccc;background:#fff}.sheet{font-size:12px}}
 
@@ -1019,7 +1018,7 @@ function viewStudy(id){
        ${t.fc.length||t.qs.length?`<a class="btn ghost" href="#study-${t.id}" id="jumpTest">انتقل إلى «اختبر نفسك» ↓</a>`:""}
      </div>
    </header>
-   ${t.sum?`<aside class="tsum"><b>الخلاصة في ثلاثة أسطر</b><ol>${t.sum.map(x=>`<li>${rich(x)}</li>`).join("")}</ol></aside>`:""}<div class="reading">${t.blocks.map(blockHTML).join("")}</div>
+   ${t.sum?`<details class="tsum"><summary><b>الخلاصة في ثلاثة أسطر</b><span>عرض ▾</span></summary><ol>${t.sum.map(x=>`<li>${rich(x)}</li>`).join("")}</ol></details>`:""}<div class="reading">${t.blocks.map(blockHTML).join("")}</div>
    ${t.ex.length?`<section class="stack"><h2 class="h2">شواهد هذا المطلب</h2><div class="ex-grid">${t.ex.map(exCard).join("")}</div></section>`:""}
    ${t.fc.length||t.qs.length?`<section class="selftest" id="selftest">
      <header><h2 class="h2" style="font-size:17px">اختبر نفسك في هذا المطلب</h2><span class="tag">من بنك الأسئلة والبطاقات</span></header>
@@ -1515,6 +1514,4 @@ route();
 /* /ACCOUNT-SETTINGS */
 })();
 </script>
-</body></html>
-
 </body></html>
