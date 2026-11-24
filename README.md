@@ -12,7 +12,7 @@
 
 **👇 اختر المقرر واضغط على الرابط لتبدأ المذاكرة**
 
-### [🌐 افتح الموقع](https://bilalattari252612-prog.github.io/Tafseer/)
+### [🌐 افتح الموقع](https://manassa-study.github.io/Tafseer/)
 
 </div>
 
@@ -22,8 +22,8 @@
 
 | المقرر | الوصف | الرابط |
 | :---: | :--- | :---: |
-| 🟢 **التفسير المقارن** | مناهج المفسرين، أسباب اختلافهم، وطرق الترجيح بين أقوالهم | [**ابدأ المذاكرة ←**](https://bilalattari252612-prog.github.io/Tafseer/TafseerMaqaranAQU.html) |
-| 🔵 **تاريخ التفسير** | نشأة التفسير ومراحله وأشهر المفسرين ومصنفاتهم | [**ابدأ المذاكرة ←**](https://bilalattari252612-prog.github.io/Tafseer/TareekhTafseerAQU.html) |
+| 🟢 **التفسير المقارن** | مناهج المفسرين، أسباب اختلافهم، وطرق الترجيح بين أقوالهم | [**ابدأ المذاكرة ←**](https://manassa-study.github.io/Tafseer/TafseerMaqaranAQU.html) |
+| 🔵 **تاريخ التفسير** | نشأة التفسير ومراحله وأشهر المفسرين ومصنفاتهم | [**ابدأ المذاكرة ←**](https://manassa-study.github.io/Tafseer/TareekhTafseerAQU.html) |
 
 ---
 
