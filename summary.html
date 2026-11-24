@@ -35,7 +35,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);min-height
 @media (max-width:640px){.zoom,.count{display:none}.btn .lbl{display:none}.btn{padding:0 11px}}
 #pages{max-width:1100px;margin:0 auto;padding:18px 16px 60px;display:flex;flex-direction:column;align-items:safe center;gap:14px}
 .page{position:relative;background:#fff;box-shadow:0 2px 6px rgba(11,42,82,.08),0 10px 28px rgba(11,42,82,.12);border-radius:4px;overflow:hidden;flex:none}
-.page canvas{display:block;width:100%;height:100%}
+.page img{display:block;width:100%;height:auto;background:#fff}
 .page .n{position:absolute;bottom:6px;left:8px;font:500 11px var(--f-ui);color:#8995aa;background:rgba(255,255,255,.85);padding:1px 7px;border-radius:999px}
 .msg{max-width:520px;margin:60px auto;padding:24px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;line-height:1.9}
 .msg a{color:var(--gold)}
@@ -55,51 +55,33 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);min-height
 </header>
 <main id="pages"><div class="msg" id="status"><div class="spin"></div>جارٍ تحميل الملخص…</div></main>
 
-<script src="vendor/pdfjs/pdf.min.js"></script>
 <script>
 (function(){
+  /* Pages are pictures made from the original PDF, so every phone and browser shows them exactly as designed. */
   var DOCS={
-    usool:{title:"أصول كتابة البحث العلمي",file:"summaries/usool-kitabat-al-bahth.pdf",dl:"مرشد تلخيصي لأصول كتابة البحث العلمي.pdf"},
-    manahij:{title:"مناهج المفسرين",file:"summaries/manahij-al-mufassirin.pdf",dl:"زبدة مساق مناهج المفسرين.pdf"}
+    usool:{title:"أصول كتابة البحث العلمي",file:"summaries/usool-kitabat-al-bahth.pdf",dl:"مرشد تلخيصي لأصول كتابة البحث العلمي.pdf",dir:"summaries/usool/",pages:27,w:1241,h:1755},
+    manahij:{title:"مناهج المفسرين",file:"summaries/manahij-al-mufassirin.pdf",dl:"زبدة مساق مناهج المفسرين.pdf",dir:"summaries/manahij/",pages:60,w:1755,h:1241}
   };
   var key=new URLSearchParams(location.search).get("c");
-  var doc=DOCS[key], box=document.getElementById("pages"), status=document.getElementById("status");
-  function fail(html){status.innerHTML=html;}
-  if(!doc){fail('لم يُعثر على هذا الملخص. <a href="./">ارجع إلى الرئيسية</a>.');return;}
+  var doc=DOCS[key], box=document.getElementById("pages"), status=document.getElementById("status"), count=document.getElementById("count");
+  if(!doc){status.innerHTML='لم يُعثر على هذا الملخص. <a href="./">ارجع إلى الرئيسية</a>.';return;}
   document.title=doc.title+" — ملخص · منصة المذاكرة";
   document.getElementById("title").textContent="ملخص "+doc.title;
   var dl=document.getElementById("dl"); dl.href=doc.file; dl.setAttribute("download",doc.dl);
-  if(!window.pdfjsLib){fail('تعذّر تشغيل القارئ. يمكنك <a href="'+doc.file+'">فتح الملف مباشرة</a>.');return;}
-  pdfjsLib.GlobalWorkerOptions.workerSrc="vendor/pdfjs/pdf.worker.min.js";
-
-  var pdf, scale=1, slots=[], dpr=Math.min(window.devicePixelRatio||1,2), count=document.getElementById("count");
-  function baseWidth(){return Math.min(box.clientWidth-32,1000);}
-  function layout(){
-    slots.forEach(function(s){var w=baseWidth()*scale; s.el.style.width=w+"px"; s.el.style.height=(w*s.ratio)+"px";
-      if(s.done&&Math.abs(s.w-w)>2){s.done=false; if(s.vis)render(s);}});
+  status.parentNode.removeChild(status);
+  var scale=1, els=[];
+  function pad(n){return n<10?"0"+n:""+n;}
+  for(var i=1;i<=doc.pages;i++){
+    var el=document.createElement("div"); el.className="page";
+    var img=document.createElement("img"); img.src=doc.dir+"p-"+pad(i)+".jpg"; img.alt="صفحة "+i; img.width=doc.w; img.height=doc.h;
+    img.loading=i<=2?"eager":"lazy"; img.decoding="async";
+    var n=document.createElement("span"); n.className="n"; n.textContent=i;
+    el.appendChild(img); el.appendChild(n); el._n=i; box.appendChild(el); els.push(el);
   }
-  function render(s){
-    if(s.busy||s.done)return; s.busy=true; var w=baseWidth()*scale;
-    pdf.getPage(s.n).then(function(p){
-      var v=p.getViewport({scale:(w*dpr)/p.getViewport({scale:1}).width});
-      var c=s.canvas; c.width=Math.floor(v.width); c.height=Math.floor(v.height);
-      return p.render({canvasContext:c.getContext("2d"),viewport:v}).promise;
-    }).then(function(){s.done=true;s.w=w;s.busy=false;},function(){s.busy=false;});
-  }
-  pdfjsLib.getDocument({url:doc.file,disableAutoFetch:true,disableStream:false}).promise.then(function(d){
-    pdf=d; status.remove();
-    var jobs=[]; for(var i=1;i<=d.numPages;i++)jobs.push(d.getPage(i));
-    return Promise.all(jobs);
-  }).then(function(pages){
-    var io=new IntersectionObserver(function(es){es.forEach(function(e){var s=e.target._s; s.vis=e.isIntersecting; if(s.vis)render(s);});},{rootMargin:"800px 0px"});
-    var cio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)count.textContent=e.target._s.n+" / "+pages.length;});},{rootMargin:"-45% 0px -45% 0px"});
-    pages.forEach(function(p,i){var v=p.getViewport({scale:1});
-      var el=document.createElement("div"); el.className="page"; var c=document.createElement("canvas"); var n=document.createElement("span"); n.className="n"; n.textContent=i+1;
-      el.appendChild(c); el.appendChild(n); box.appendChild(el);
-      var s={n:i+1,ratio:v.height/v.width,el:el,canvas:c}; el._s=s; slots.push(s); io.observe(el); cio.observe(el);});
-    count.textContent="1 / "+pages.length; layout();
-  }).catch(function(){fail('تعذّر عرض الملخص هنا. يمكنك <a href="'+doc.file+'">فتح الملف مباشرة</a> أو تحميله.');});
-
+  function layout(){var w=Math.min(box.clientWidth-32,1000)*scale; els.forEach(function(el){el.style.width=w+"px";});}
+  layout(); count.textContent="1 / "+doc.pages;
+  if("IntersectionObserver" in window){var cio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)count.textContent=e.target._n+" / "+doc.pages;});},{rootMargin:"-45% 0px -45% 0px"});
+    els.forEach(function(el){cio.observe(el);});}
   function zoom(f){scale=Math.max(.5,Math.min(2.5,scale*f)); layout();}
   document.getElementById("zin").onclick=function(){zoom(1.2)};
   document.getElementById("zout").onclick=function(){zoom(1/1.2)};
