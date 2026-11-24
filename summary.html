@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ملخص المقرر — منصة المذاكرة</title>
+<meta name="description" content="ملخصات مقررات منصة المذاكرة للقراءة والتحميل: أصول كتابة البحث العلمي، ومناهج المفسرين، في خرائط ذهنية وجداول مع ملف PDF.">
 <meta name="theme-color" content="#0b2a52">
 <link rel="icon" href="favicon.png" type="image/png" sizes="48x48"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,13 +60,16 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);min-height
 (function(){
   /* Pages are pictures made from the original PDF, so every phone and browser shows them exactly as designed. */
   var DOCS={
-    usool:{title:"أصول كتابة البحث العلمي",file:"summaries/usool-kitabat-al-bahth.pdf",dl:"مرشد تلخيصي لأصول كتابة البحث العلمي.pdf",dir:"summaries/usool/",pages:27,w:1241,h:1755},
-    manahij:{title:"مناهج المفسرين",file:"summaries/manahij-al-mufassirin.pdf",dl:"زبدة مساق مناهج المفسرين.pdf",dir:"summaries/manahij/",pages:60,w:1755,h:1241}
+    usool:{title:"أصول كتابة البحث العلمي",desc:"ملخص الباب الأول من «أصول كتابة البحث العلمي وتحقيق المخطوطات» في خرائط ذهنية لمراحل البحث، مع بنك أسئلة، للقراءة وتحميل PDF.",file:"summaries/usool-kitabat-al-bahth.pdf",dl:"مرشد تلخيصي لأصول كتابة البحث العلمي.pdf",dir:"summaries/usool/",pages:27,w:1241,h:1755},
+    manahij:{title:"مناهج المفسرين",desc:"زبدة مساق مناهج المفسرين في خرائط ذهنية وجداول: التفسير بالمأثور وبالرأي، والمدارس العقدية والفقهية، والاتجاهات الحديثة، للقراءة وتحميل PDF.",file:"summaries/manahij-al-mufassirin.pdf",dl:"زبدة مساق مناهج المفسرين.pdf",dir:"summaries/manahij/",pages:60,w:1755,h:1241}
   };
   var key=new URLSearchParams(location.search).get("c");
   var doc=DOCS[key], box=document.getElementById("pages"), status=document.getElementById("status"), count=document.getElementById("count");
   if(!doc){status.innerHTML='لم يُعثر على هذا الملخص. <a href="./">ارجع إلى الرئيسية</a>.';return;}
   document.title=doc.title+" — ملخص · منصة المذاكرة";
+  /* search engines: one address and one description for each summary */
+  var md=document.querySelector('meta[name="description"]'); if(md) md.content=doc.desc;
+  var cn=document.createElement("link"); cn.rel="canonical"; cn.href="https://manassa-study.github.io/Tafseer/summary.html?c="+key; document.head.appendChild(cn);
   document.getElementById("title").textContent="ملخص "+doc.title;
   var dl=document.getElementById("dl"); dl.href=doc.file; dl.setAttribute("download",doc.dl);
   status.parentNode.removeChild(status);
