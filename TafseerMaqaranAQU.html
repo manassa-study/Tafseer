@@ -304,6 +304,7 @@ main{min-width:0}
 .ex .ayah{font-size:calc(21px*var(--scale));line-height:2}
 .ex .d{font-family:var(--f-read);font-size:14.5px;line-height:1.95;color:var(--muted)}
 
+.resume.solo{display:flex;flex-direction:column;gap:10px}.hprog{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:12px 16px}.hprog>summary,.fc-filt>summary,.qmore>summary,.mm2-dd>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:40px}.hprog>summary::-webkit-details-marker,.fc-filt>summary::-webkit-details-marker,.qmore>summary::-webkit-details-marker,.mm2-dd>summary::-webkit-details-marker,details.blk>summary::-webkit-details-marker{display:none}.prog-t{font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--accent)}.prog-s{font-size:12.5px;color:var(--muted);flex:1;min-width:0}.prog-o{font-size:12px;color:var(--muted)}.hprog[open] .prog-o{display:none}.prog-in{display:grid;gap:16px;margin-top:14px}details.blk{display:block;padding:0;border-bottom:1px dashed var(--line)}details.blk:last-child{border-bottom:0}details.blk>summary{cursor:pointer;list-style:none;display:flex;align-items:flex-start;gap:10px;padding:14px 0}details.blk>summary::before{content:'◂';color:var(--accent);font-size:12px;line-height:2.1;transition:transform .2s;flex:none}details.blk[open]>summary::before{transform:rotate(-90deg)}details.blk>summary h3{flex:1}details.blk>.blk-b{display:flex;flex-direction:column;gap:10px;padding-bottom:16px}details.blk.exam{padding:0 16px;margin-block:8px}details.blk.exam>summary::before{color:var(--exam)}.fc-filt,.qmore,.mm2-dd{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:8px 14px}.qmore{background:var(--surface-2,var(--surface))}.fc-filt>summary span,.qmore>summary span{font-weight:700;font-size:14px;color:var(--ink)}.fc-filt>summary em,.qmore>summary em,.mm2-dd>summary em{font-style:normal;font-size:12.5px;color:var(--muted);flex:1;min-width:0}.fc-filt>summary i,.qmore>summary i{display:inline-block;transition:transform .2s;font-style:normal;color:var(--muted);font-size:12px}.fc-filt[open]>summary i,.qmore[open]>summary i{transform:rotate(180deg)}.qmore-in{display:grid;gap:16px;margin:12px 0 6px}.mm2-dd>summary b.no{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;background:var(--accent);color:var(--accent-ink)}.mm2-dd>summary span{font-weight:700;font-size:14.5px;color:var(--ink)}.mm2-dd>summary em{flex:none;margin-inline-start:auto;color:var(--accent);font-weight:700}.mm2-dd>.mm2-pick{border:0;padding:10px 0 4px;background:none}@media (max-width:700px){.mm2-dd>summary em{flex-basis:100%;margin:0}}.selftest>summary{cursor:pointer;list-style:none;padding:14px 18px;background:var(--surface-2);display:flex;flex-wrap:wrap;gap:8px;align-items:center}.selftest>summary::-webkit-details-marker{display:none}.selftest>summary h2{flex:1;min-width:180px}.selftest>summary em{font-style:normal;font-size:12.5px;color:var(--accent);font-weight:700}.selftest[open]>summary em{display:none}@media print{.hprog,.fc-filt,.qmore,.mm2-dd,#blkAll{display:none}}
 /* ---------- mind maps ---------- */
 .mm-pick{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
 .mm-pick button{flex:none;text-align:right;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 13px;max-width:240px}
@@ -957,6 +958,21 @@ function viewHome(){
     </div>
   </section>
 
+    <section class="panel resume solo">
+      <div class="panel-h"><span class="eyebrow">أكمل من حيث توقفت</span></div>
+      <div class="resume-k">${esc(next.ch.title.split(":")[0])} · ${esc(next.k)}</div>
+      <h2 class="resume-t">${esc(next.short)}</h2>
+      <div class="row"><span class="pg">${esc(next.pages)}</span>${next.blocks.some(b=>b.exam)?'<span class="tag exam">فيه موضع امتحاني</span>':""}${next.qs.length?`<span class="tag gold">${toAr(next.qs.length)} أسئلة</span>`:""}</div>
+      <a class="btn primary" href="#study-${next.id}" style="align-self:flex-start">افتح المطلب</a>
+    </section>
+
+
+  <section>
+    <div class="sec-h"><span class="orn"></span><h2>أقسام المنصة</h2><span class="orn"></span></div>
+    <div class="tiles">${TILES.map(([h,ic,t,s,c])=>`<a class="tile ${c}" href="${h}"><span class="tile-i"><svg viewBox="0 0 24 24">${ICONS[ic]}</svg></span><b>${t}</b><span>${s}</span></a>`).join("")}</div>
+  </section>
+
+  <details class="hprog" id="progBox"${S.progOpen?" open":""}><summary><span class="prog-t">تقدّمي</span><span class="prog-s">المطالب ${toAr(done)}/${toAr(TOPICS.length)} · البطاقات ${toAr(mastered)}/${toAr(FC.length)} · أفضل نتيجة ${best===null?"—":toAr(best)+"٪"}</span><span class="prog-o">عرض ▾</span></summary><div class="prog-in">
   <section class="kpis">
     <a class="kpi" href="#study-${next.id}">${ring(Math.round(done/TOPICS.length*100),58,toAr(done))}<div><b>المطالب المدروسة</b><span>${toAr(done)} من ${toAr(TOPICS.length)}</span></div></a>
     <a class="kpi" href="#review-cards">${ring(Math.round(mastered/FC.length*100),58,toAr(mastered),"var(--b3)")}<div><b>البطاقات المتقنة</b><span>${toAr(mastered)} من ${toAr(FC.length)}</span></div></a>
@@ -965,14 +981,6 @@ function viewHome(){
   </section>
 
   <div class="dgrid">
-    <section class="panel resume">
-      <div class="panel-h"><span class="eyebrow">أكمل من حيث توقفت</span></div>
-      <div class="resume-k">${esc(next.ch.title.split(":")[0])} · ${esc(next.k)}</div>
-      <h2 class="resume-t">${esc(next.short)}</h2>
-      <div class="row"><span class="pg">${esc(next.pages)}</span>${next.blocks.some(b=>b.exam)?'<span class="tag exam">فيه موضع امتحاني</span>':""}${next.qs.length?`<span class="tag gold">${toAr(next.qs.length)} أسئلة</span>`:""}</div>
-      <a class="btn primary" href="#study-${next.id}" style="align-self:flex-start">افتح المطلب</a>
-    </section>
-
     <section class="panel">
       <div class="panel-h"><span class="eyebrow">تقدّمك في الفصول</span></div>
       ${CH.map((c,ci)=>{const ts=TOPICS.filter(t=>t.ch===c),d=ts.filter(t=>S.done[t.id]).length;return `
@@ -981,14 +989,7 @@ function viewHome(){
           <div class="segbar">${ts.map(t=>`<a href="#study-${t.id}" class="${S.done[t.id]?"on":""}" title="${esc(t.short)}"></a>`).join("")}</div>
         </div>`;}).join("")}
     </section>
-  </div>
-
-  ${planPanel()}
-  <section>
-    <div class="sec-h"><span class="orn"></span><h2>أقسام المنصة</h2><span class="orn"></span></div>
-    <div class="tiles">${TILES.map(([h,ic,t,s,c])=>`<a class="tile ${c}" href="${h}"><span class="tile-i"><svg viewBox="0 0 24 24">${ICONS[ic]}</svg></span><b>${t}</b><span>${s}</span></a>`).join("")}</div>
-  </section>
-
+    </div>
   <div class="dgrid">
     <section class="panel">
       <div class="panel-h"><span class="eyebrow">إتقان البطاقات حسب التصنيف</span><a class="btn ghost sm" href="#review-cards">راجع</a></div>
@@ -1002,9 +1003,11 @@ function viewHome(){
        :`<div class="empty"><b>لم تبدأ أي اختبار بعد</b><p class="muted">بعد أول اختبار ستظهر هنا نتائجك والمطالب التي تحتاج مراجعتها.</p><a class="btn primary" href="#quiz">ابدأ اختباراً قصيراً</a></div>`}
     </section>
   </div>
+  </div></details>
+
   <footer class="credit"><span class="orn"></span><p>تصميم: <b>محمد بلال البلوشي</b></p><span class="orn"></span></footer>
   </div>`;
-  const pb=$("#pickBtn");if(pb)pb.onclick=()=>showWelcome(true);
+  const pb=$("#pickBtn");if(pb)pb.onclick=()=>showWelcome(true);const pg=$("#progBox");if(pg)pg.ontoggle=()=>{S.progOpen=pg.open;save();};
   const ga=$("#goAgain");if(ga)ga.onclick=()=>{fcState.onlyAgain=true;fcState.onlyNew=false;fcState.cat="الكل";fcState.i=0;};
   const ed=$("#examDate");if(ed)ed.onchange=()=>{S.examDate=ed.value||null;save();viewHome();};
   const ec=$("#examClr");if(ec)ec.onclick=()=>{S.examDate=null;save();viewHome();};
@@ -1041,13 +1044,12 @@ function viewAbout(){
 }
 
 function blockHTML(b,i){
-  let h=`<section class="blk${b.exam?" exam":""}${b.key?" key":""}" id="b${i}">`;
-  h+=`<h3>${rich(b.cleanLabel)}${b.exam?` <span class="tag exam">موضع سؤال امتحاني</span>`:""}${b.key?` <span class="tag gold">خلاصة الترجيح · مهم للاختبار</span>`:""}</h3>`;
+  let h=`<details class="blk${b.exam?" exam":""}${b.key?" key":""}" id="b${i}"${i===0||b.key?" open":""}><summary><h3>${rich(b.cleanLabel)}${b.exam?` <span class="tag exam">موضع سؤال امتحاني</span>`:""}${b.key?` <span class="tag gold">خلاصة الترجيح · مهم للاختبار</span>`:""}</h3></summary><div class="blk-b">`;
   if(b.text)h+=`<p>${rich(b.text)}</p>`;
   if(b.ayah){const m=b.ayah.match(/^(﴿[^﴾]*﴾)\s*(.*)$/);h+=`<div class="ayah-box"><span class="ayah">${esc(m?m[1]:b.ayah)}</span>${m&&m[2]?`<span class="ref">${esc(m[2])}</span>`:""}</div>`;}
   if(b.list)h+=list(b.list);
   if(b.table)h+=tableHTML(b.table,true);
-  return h+`</section>`;
+  return h+`</div></details>`;
 }
 function tableHTML(tb,inTopic){
   return `<section class="cmp${inTopic?" in-topic":""}">${inTopic?"":`<h3>${rich(tb.title)}</h3>`}<div style="overflow-x:auto"><table><thead><tr>${tb.headers.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${tb.rows.map(r=>{const cells=r.filter((c,i)=>i===0||c!=="");const span=cells.length===2&&r.length>2;return `<tr>${cells.map((c,i)=>`<td data-h="${esc(tb.headers[i])}"${span&&i===1?` colspan="${r.length-1}" class="rj"`:""}>${rich(c)}</td>`).join("")}</tr>`;}).join("")}</tbody></table></div></section>`;
@@ -1088,17 +1090,16 @@ function viewStudy(id){
          ${t.fc.length?`<span class="tag acc">${toAr(t.fc.length)} بطاقة</span>`:""}
          ${t.qs.length?`<span class="tag gold">${toAr(t.qs.length)} سؤال</span>`:""}
        </div>
-       ${t.fc.length||t.qs.length?`<a class="btn ghost" href="#study-${t.id}" id="jumpTest">انتقل إلى «اختبر نفسك» ↓</a>`:""}
+       <div class="row">${t.blocks.length>1?`<button class="btn ghost" id="blkAll">افتح كل الفقرات</button>`:""}${t.fc.length||t.qs.length?`<a class="btn ghost" href="#study-${t.id}" id="jumpTest">انتقل إلى «اختبر نفسك» ↓</a>`:""}</div>
      </div>
    </header>
    <div class="reading">${t.blocks.map(blockHTML).join("")}</div>
-   ${t.ex.length?`<section class="stack"><h2 class="h2">شواهد هذا المطلب</h2><div class="ex-grid">${t.ex.map(exCard).join("")}</div></section>`:""}
-   ${t.fc.length||t.qs.length?`<section class="selftest" id="selftest">
-     <header><h2 class="h2" style="font-size:17px">اختبر نفسك في هذا المطلب</h2><span class="tag">من بنك الأسئلة والبطاقات</span></header>
+   ${t.ex.length?`<details class="selftest exfold"><summary><h2 class="h2" style="font-size:17px">شواهد هذا المطلب</h2><span class="tag">${toAr(t.ex.length)} شاهد</span><em>افتح ▾</em></summary><div class="ex-grid" style="padding:16px 18px">${t.ex.map(exCard).join("")}</div></details>`:""}
+   ${t.fc.length||t.qs.length?`<details class="selftest" id="selftest"><summary><h2 class="h2" style="font-size:17px">اختبر نفسك في هذا المطلب</h2><span class="tag">${[t.fc.length?toAr(t.fc.length)+" بطاقة":"",t.qs.length?toAr(t.qs.length)+" سؤال":""].filter(Boolean).join(" · ")}</span><em>افتح ▾</em></summary>
      <div>
       ${t.fc.map(c=>`<div class="mini-fc"><button class="q">${rich(c.q)}</button><div class="a">${rich(c.a)}</div></div>`).join("")}
       ${t.qs.map((q,i)=>questionBlock(q,i,"st")).join('<hr style="border:0;border-top:1px dashed var(--line);margin:0;width:100%">')}
-     </div></section>`:""}
+     </div></details>`:""}
    <div class="done-bar${S.done[t.id]?" is-done":""}">
      <div><b>${S.done[t.id]?"تمت دراسة هذا المطلب":"أنهيت القراءة؟"}</b><div style="font-size:13px;color:var(--muted)">${S.done[t.id]?"يظهر بعلامة ✓ في الفهرس.":"علّمه ليظهر تقدمك في الفهرس."}</div></div>
      <button class="btn ${S.done[t.id]?"":"primary"}" id="doneBtn">${S.done[t.id]?"إلغاء العلامة":"تمت دراسته ✓"}</button>
@@ -1109,7 +1110,8 @@ function viewStudy(id){
    </nav>
   </article>`;
   $("#doneBtn").onclick=()=>{S.done[t.id]=!S.done[t.id];save();const y=scrollY;route();scrollTo(0,y);};
-  const j=$("#jumpTest");if(j)j.onclick=e=>{e.preventDefault();$("#selftest").scrollIntoView({behavior:"smooth",block:"start"});};
+  const ba=$("#blkAll");if(ba)ba.onclick=()=>{const ds=[...V.querySelectorAll("details.blk")],o=!ds.every(d=>d.open);ds.forEach(d=>d.open=o);ba.textContent=o?"اطوِ كل الفقرات":"افتح كل الفقرات";};
+  const j=$("#jumpTest");if(j)j.onclick=e=>{e.preventDefault();$("#selftest").open=true;$("#selftest").scrollIntoView({behavior:"smooth",block:"start"});};
   V.querySelectorAll(".mini-fc .q").forEach(b=>b.onclick=()=>b.parentElement.classList.toggle("open"));
   wirePractice(V);
   return t.id;
@@ -1178,10 +1180,11 @@ function renderCards(R){
   const l=fcList();if(fcState.i>=l.length)fcState.i=0;const c=l[fcState.i];
   const m=FC.filter(x=>S.mastered[x.id]).length;
   R.innerHTML=`<div class="fc-wrap">
-   <div class="row" style="justify-content:space-between">
+   <details class="fc-filt" id="fcFilt"${fcState.filt?" open":""}><summary><span>تصفية البطاقات</span><em>${esc(fcState.cat)}${fcState.onlyNew?" · غير المتقنة":""}${fcState.order?" · عشوائي":""}</em><i>▾</i></summary>
+   <div class="row" style="justify-content:space-between;margin-top:12px">
      <div class="row">${cats.map(k=>`<button class="chip" aria-pressed="${k===fcState.cat}" data-c="${esc(k)}">${esc(k)}</button>`).join("")}</div>
      <div class="row">${FC.some(x=>S.again[x.id]&&!S.mastered[x.id])||fcState.onlyAgain?`<button class="chip" id="fcAgainOnly" aria-pressed="${!!fcState.onlyAgain}">أحتاج مراجعتها (${toAr(FC.filter(x=>S.again[x.id]&&!S.mastered[x.id]).length)})</button>`:""}<button class="chip" id="fcNew" aria-pressed="${fcState.onlyNew}">غير المتقنة فقط</button><button class="chip" id="fcShuf" aria-pressed="${!!fcState.order}">ترتيب عشوائي</button></div>
-   </div>
+   </div></details>
    <div class="row" style="justify-content:space-between;font-size:13px;color:var(--muted)"><span>أتقنت ${toAr(m)} من ${toAr(FC.length)}</span><div class="bar" style="flex:1;max-width:260px"><i style="width:${m/FC.length*100}%;background:var(--ok)"></i></div></div>
    ${c?`<div class="fc${fcState.flip?" back":""}" id="fcBox" role="button" tabindex="0" aria-label="اقلب البطاقة">
      <div class="fc-top"><span>${esc(c.cat)}</span><span>${toAr(fcState.i+1)} / ${toAr(l.length)}</span></div>
@@ -1194,10 +1197,11 @@ function renderCards(R){
      <button class="btn know" id="fcKnow">${S.mastered[c.id]?"✓ متقنة":"أتقنتها"}</button>
      <button class="btn" id="fcNext" aria-label="التالية">←</button>
    </div>
-   <div class="fc-dots">${l.map((x,i)=>`<i class="${S.mastered[x.id]?"m":""}${i===fcState.i?" cur":""}"></i>`).join("")}</div>`
+`
    :`<div class="card" style="text-align:center">${fcState.onlyAgain?"لا بطاقات بقيت للمراجعة هنا.":"أتقنت كل البطاقات في هذا التصنيف."} <button class="btn ghost" id="fcAll">اعرض الكل</button></div>`}
   </div>`;
   const re=()=>renderCards(R);
+  const ff=$("#fcFilt");if(ff)ff.ontoggle=()=>{fcState.filt=ff.open;};
   R.querySelectorAll(".chip[data-c]").forEach(b=>b.onclick=()=>{fcState.cat=b.dataset.c;fcState.i=0;fcState.flip=false;re();});
   $("#fcNew").onclick=()=>{fcState.onlyNew=!fcState.onlyNew;fcState.onlyAgain=false;fcState.i=0;fcState.flip=false;re();};
   const fa=$("#fcAgainOnly");if(fa)fa.onclick=()=>{fcState.onlyAgain=!fcState.onlyAgain;fcState.onlyNew=false;fcState.i=0;fcState.flip=false;re();};
@@ -1261,12 +1265,14 @@ function viewMaps(idx){
   const m=maps[idx],isIdx=idx===0,recall=!!S.mmRecall&&!isIdx;
   V.innerHTML=`<div class="stack-lg"><header class="phead"><div class="eyebrow">خرائط المراجعة</div><h1 class="h1">${esc(m.title.replace(/^الخريطة [^:]+:\s*/,""))}</h1>
     <p class="lead">${rich(m.centerSub)}</p></header>
-   <nav class="mm2-pick" aria-label="اختر خريطة">${[["نظرة عامة",[0]],["الفصل الأول",[1,2]],["الفصل الثاني",[3,4]],["النماذج التطبيقية",[5,6,7]]].map(([g,ids])=>`<div class="mm2-g"><span>${g}</span><div>${ids.filter(i=>maps[i]).map(i=>`<button aria-pressed="${i===idx}" data-i="${i}"><b class="no">${toAr(i+1)}</b><span>${esc(i===0?"فهرس الكتاب المرئي":maps[i].centerTitle)}</span></button>`).join("")}</div></div>`).join("")}</nav>
+   <details class="mm2-dd" id="mmDD"${S.mmPick?" open":""}><summary><b class="no">${toAr(idx+1)}</b><span>${esc(m.title.replace(/^الخريطة [^:]+:\s*/,""))}</span><em>تغيير الخريطة (${toAr(maps.length)}) ▾</em></summary>
+   <nav class="mm2-pick" aria-label="اختر خريطة">${[["نظرة عامة",[0]],["الفصل الأول",[1,2]],["الفصل الثاني",[3,4]],["النماذج التطبيقية",[5,6,7]]].map(([g,ids])=>`<div class="mm2-g"><span>${g}</span><div>${ids.filter(i=>maps[i]).map(i=>`<button aria-pressed="${i===idx}" data-i="${i}"><b class="no">${toAr(i+1)}</b><span>${esc(i===0?"فهرس الكتاب المرئي":maps[i].centerTitle)}</span></button>`).join("")}</div></div>`).join("")}</nav></details>
    <div class="mm2-bar"><p>${isIdx?"كل مبحث بطاقة، وكل مطلب فيه رابط يفتحه، والعلامة ✓ لما درسته.":"الرقم الذهبي عدد النقاط المطلوب تذكّرها. في وضع التسميع تُخفى البطاقات والإجابات حتى تتذكرها."}</p>${isIdx?"":`<div class="row"><button class="btn ${recall?"primary":"ghost"}" id="mmRecall" aria-pressed="${recall}">${recall?"وضع التسميع مُفعّل":"وضع التسميع"}</button>${recall?'<button class="btn ghost" id="mmShow">اكشف الكل</button>':""}</div>`}</div>
    ${recall?'<p class="mm2-hint">عُدّ نقاط كل فرع من ذاكرتك قبل فتحه، ثم اضغط على الجزء المخفي لكشفه.</p>':""}
    <div class="mm2${recall?" recall":""}" id="mm2">${isIdx?mmIndexHTML(m):mmTreeHTML(m)}</div>
    <div class="row" style="justify-content:space-between">${idx>0?`<a class="btn ghost" href="#maps-${idx-1}">→ السابقة</a>`:"<span></span>"}${idx<maps.length-1?`<a class="btn" href="#maps-${idx+1}">الخريطة التالية ←</a>`:""}</div></div>`;
-  V.querySelectorAll(".mm2-pick button").forEach(b=>b.onclick=()=>{location.hash="maps-"+b.dataset.i;});
+  V.querySelectorAll(".mm2-pick button").forEach(b=>b.onclick=()=>{S.mmPick=false;save();location.hash="maps-"+b.dataset.i;});
+  const dd=$("#mmDD");if(dd)dd.ontoggle=()=>{S.mmPick=dd.open;save();};
   const Rb=$("#mmRecall");if(Rb)Rb.onclick=()=>{S.mmRecall=!S.mmRecall;save();viewMaps(idx);};
   const box=$("#mm2");
   const sh=$("#mmShow");if(sh)sh.onclick=()=>{box.querySelectorAll(".mt-card,.nd.hasc").forEach(n=>{n.classList.add("open");n.classList.remove("closed");});box.querySelectorAll(".lf").forEach(n=>n.classList.add("shown"));};
@@ -1310,15 +1316,17 @@ function viewQuiz(){
       <button class="mode" data-m="practice" aria-pressed="${QZ.mode==="practice"}"><b>تدريب</b><span>تظهر الإجابة الصحيحة والتعليل بعد كل سؤال مباشرة.</span></button>
       <button class="mode" data-m="exam" aria-pressed="${QZ.mode==="exam"}"><b>اختبار محاكي بمؤقت</b><span>دقيقة ونصف لكل سؤال، والنتيجة والتصويب في النهاية.</span></button>
     </div></div>
+    <div class="field"><span>عدد الأسئلة</span><div class="row">${[10,20,40,0].map(n=>`<button class="chip" data-cnt="${n}" aria-pressed="${QZ.cnt===n}">${n?toAr(n):"كل الأسئلة"}</button>`).join("")}</div></div>
+    <details class="qmore" id="qMore"${QZ.more?" open":""}><summary><span>خيارات إضافية</span><em>${[QZ.ch!=="الكل"?QZ.ch:"",QZ.sec?"مبحث محدد":"",QZ.type!=="الكل"?QZ.type:"",QZ.bank?"بنك أخطائي":"",QZ.wrongOnly?"أخطاء سابقة":""].filter(Boolean).join(" · ")||"القسم، المبحث، نوع السؤال، بنك الأخطاء"}</em><i>▾</i></summary><div class="qmore-in">
     <div class="field"><span>الفصل</span><div class="row">${["الكل","الفصل الأول","الفصل الثاني","النماذج التطبيقية"].map(c=>`<button class="chip" data-ch="${c}" aria-pressed="${QZ.ch===c}">${c} (${toAr(QB.filter(q=>chMatch(q,c)).length)})</button>`).join("")}</div></div>
     <div class="field"><span>المبحث</span><select class="qsel" id="qSec"><option value="">كل المباحث</option>${CH.map((c,ci)=>`<optgroup label="${esc(c.title.split(":")[0])}">${c.sections.map((s,si)=>{const k=ci+"-"+si,n=QB.filter(q=>qSecOf(q)===k).length;return n?`<option value="${k}" ${QZ.sec===k?"selected":""}>${esc(s.title)} (${toAr(n)})</option>`:"";}).join("")}</optgroup>`).join("")}</select></div>
-    <div class="field"><span>عدد الأسئلة</span><div class="row">${[10,20,40,0].map(n=>`<button class="chip" data-cnt="${n}" aria-pressed="${QZ.cnt===n}">${n?toAr(n):"كل الأسئلة"}</button>`).join("")}</div></div>
     <div class="field"><span>نوع السؤال</span><div class="row">${types.map(c=>`<button class="chip" data-ty="${esc(c)}" aria-pressed="${QZ.type===c}">${esc(c)}</button>`).join("")}</div></div>
     <div class="field"><span>خيارات</span><div class="row">
       <button class="chip" id="qShuf" aria-pressed="${QZ.shuffle}">ترتيب عشوائي للأسئلة</button>
       ${(S.wrongBank||[]).length?`<button class="chip" id="qBank" aria-pressed="${QZ.bank}">بنك أخطائي (${toAr(S.wrongBank.length)})</button>`:""}
       ${S.lastWrong.length?`<button class="chip" id="qWrong" aria-pressed="${QZ.wrongOnly}">أخطاء المحاولة السابقة فقط (${toAr(S.lastWrong.length)})</button>`:""}
     </div></div>
+    </div></details>
     <div class="row" style="justify-content:space-between;border-top:1px solid var(--line);padding-top:14px">
       <span style="color:var(--muted);font-size:14px">${toAr(qCount(pool))} سؤالاً${qCount(pool)<pool.length?" من "+toAr(pool.length):""}${QZ.mode==="exam"?` · ${toAr(Math.ceil(qCount(pool)*1.5))} دقيقة`:""}</span>
       <button class="btn primary" id="qStart" ${pool.length?"":"disabled"}>ابدأ الاختبار</button>
@@ -1327,6 +1335,7 @@ function viewQuiz(){
    ${S.quizHist.length?`<section class="stack"><h2 class="h2">محاولاتك السابقة</h2><div class="hist">${S.quizHist.slice(-6).reverse().map(h=>`<div><span>${h.mode==="exam"?"اختبار محاكي":"تدريب"} · ${esc(h.ch)}</span><b>${toAr(h.c)}/${toAr(h.n)} (${toAr(Math.round(h.c/h.n*100))}٪)</b></div>`).join("")}</div></section>`:""}
   </div>`;
   V.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{QZ.mode=b.dataset.m;viewQuiz();});
+  const qm=$("#qMore");if(qm)qm.ontoggle=()=>{QZ.more=qm.open;};
   V.querySelectorAll("[data-ch]").forEach(b=>b.onclick=()=>{QZ.ch=b.dataset.ch;viewQuiz();});
   V.querySelectorAll("[data-ty]").forEach(b=>b.onclick=()=>{QZ.type=b.dataset.ty;viewQuiz();});
   $("#qShuf").onclick=()=>{QZ.shuffle=!QZ.shuffle;viewQuiz();};
@@ -1501,7 +1510,7 @@ function route(){
   else{cur="home";viewHome();}
   document.body.classList.toggle("is-home",cur==="home");document.body.classList.toggle("in-study",k==="study");setTimeout(readProg,0);
   renderNav(cur);renderSide(topicId||(cur==="study"?S.last:null));
-  if(pendingBlock!=null&&k==="study"){const el=$("#b"+pendingBlock);pendingBlock=null;if(el){el.scrollIntoView({block:"center"});el.classList.add("flash");}}
+  if(pendingBlock!=null&&k==="study"){const el=$("#b"+pendingBlock);pendingBlock=null;if(el){if(el.tagName==="DETAILS")el.open=true;el.scrollIntoView({block:"center"});el.classList.add("flash");}}
 }
 function readProg(){const bar=$("#rprog");const art=document.body.classList.contains("in-study")&&V.querySelector(".reading");if(!art){bar.hidden=true;return;}
   bar.hidden=false;const r=art.getBoundingClientRect();const total=r.height-innerHeight*.5;const p=Math.min(1,Math.max(0,(-r.top+innerHeight*.35)/Math.max(total,1)));bar.firstElementChild.style.width=(p*100)+"%";}
